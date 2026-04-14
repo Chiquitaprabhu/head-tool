@@ -11,7 +11,7 @@ error handling
 Error Handling:
 - [invalid number — will throw an error saying -  illegal line count.]
 - [missing file — will throw an error saying - No such file or directory.]
-- [no arguments — ]
+- [no arguments — wait for user to input]
 non-functional requirements 
 Memory : We will only read as many lines or characters as given in the input into the memory.
 Error Handling : The tool displays clean, user-friendly error messages for invalid flags and missing files. No Python tracebacks are shown to the user.
@@ -26,7 +26,7 @@ sys.argv → [parse_flags()] → flags, [count] ,file_path
 
 structure
 
-- parse_flags(): loops through sys.argv, separates flags from the count and filename, validates flags against supported options (-n, -c), and returns the output.
+- parse_flags(): loops through sys.argv, separates flags from the count and filename, validates flags against supported options (-n, -c), count against isdigit() and returns the output.
 - count_lines(count, source): takes any line source (file or stdin) and computes number of lines as per the count. Reads one line at a time to keep memory usage low. 
 - count_bytes(count, source): takes any line source (file or stdin) and computes number of bytes as per the count. Reads one line at a time to keep memory usage low. 
 - Main flow: 
@@ -36,6 +36,17 @@ structure
 4. Display results
 
 design decisions
-- Chose manual sys.argv parsing over argparse so that we learn file I/O 
+- Chose manual sys.argv parsing over argparse because the tool only has two flags. Manual parsing is simpler to implement and easier to read for a small number of arguments. For a tool with many flags or complex argument relationships, argparse would be the better choice. 
 - Create two methods count_lines and count_bytes depending on the flags passed, the file here will only be read once and 
-will be passed to the correcponding functions.
+will be passed to the correcponding functions. 
+
+Testing
+compare against head tool:
+[1] empty file
+[2] file with no new line
+[3] file with count greater than the number of lines present in the file
+[4] file with bytes greater than the number of bytes present in the file
+[5] Invalid number
+[6] nonexistent file
+[7] test stdin input (piping) 
+[8] head -n 5 -c 10 motivation.txt
